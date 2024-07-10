@@ -1,0 +1,11 @@
+[Unit]
+Description=Kind Control Plane Container
+After=network.target
+
+[Service]
+Restart=always
+ExecStart=/usr/bin/podman start -a kind-control-plane
+ExecStop=/usr/bin/podman stop -t 2 kind-control-plane
+
+[Install]
+WantedBy=multi-user.target
