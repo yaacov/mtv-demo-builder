@@ -1,74 +1,51 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-set -euo pipefail
+sudo dnf install podman -y
 
-script_dir=$(realpath $(dirname "$0"))
+# Define the username and password
+USERNAME="demo"
+PASSWORD="demo"
 
-# Install qemu and libguestfs tools
-#sudo dnf install libguestfs-tools-c qemu-kvm qemu-img
+# Create the new user
+sudo useradd -m -s /bin/bash $USERNAME
 
-BASE_IMAGE=Fedora-Cloud-Base-Generic.x86_64-40-1.14.qcow2
-IMAGE=fedora-cloud.qcow2
-IMAGE_STEP1=fedora-cloud-clean.qcow2
+# Set the password for the new user
+echo "$USERNAME:$PASSWORD" | sudo chpasswd
 
-SCRIPT=${script_dir}/mtv-image-setup.sh
-FIRST_BOOT=${script_dir}/first-boot.sh
-SERVICE=${script_dir}/kind-control-plane.service
+# Add user to sudoers
+usermod -aG wheel $USERNAME
+echo '%wheel ALL=(ALL)       NOPASSWD: ALL' >> /etc/sudoers
 
-# Download base image
-if [ -e "${BASE_IMAGE}" ]; then
-    echo "Base image exists."
-else
-    echo "Downloading base imgae ..."
-    curl -LO https://download.fedoraproject.org/pub/fedora/linux/releases/40/Cloud/x86_64/images/${BASE_IMAGE}
-fi
+# Install kubectl
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo install kubectl /usr/local/bin/kubectl
 
-cp ${BASE_IMAGE} ${IMAGE}
+# Install kind
+export VERSION=v0.23.0
+curl -LO https://kind.sigs.k8s.io/dl/${VERSION}/kind-linux-amd64
+sudo install kind-linux-amd64 /usr/local/bin/kind
 
-# Set root password
-echo "Setting root user for base imgae ..."
-virt-customize -a ${IMAGE} --root-password password:root --uninstall cloud-init
+# Get mtv UI repository
+# Define the URL and the filename
+FILENAME="v2.6.3-rc3.tar.gz"
+URL="https://github.com/kubev2v/forklift-console-plugin/archive/refs/tags/${FILENAME}"
 
-# Run setup script
-echo "Run setup scripts on base imgae ..."
-virt-customize -a ${IMAGE} --upload ${SCRIPT}:/mtv-image-setup.sh
-virt-customize -a ${IMAGE} --upload ${FIRST_BOOT}:/first-boot.sh
-virt-customize -a ${IMAGE} --upload ${SERVICE}:/etc/systemd/system/kind-control-plane.service
+# Download the tar.gz file
+curl -Lo $FILENAME $URL
 
-virt-customize -a ${IMAGE} --run-command 'bash /mtv-image-setup.sh'
-virt-customize -a ${IMAGE} --firstboot ${FIRST_BOOT}
+# Create a directory to extract the contents
+EXTRACT_DIR="forklift-console-plugin"
+mkdir -p $EXTRACT_DIR
 
-echo "=================================================="
-echo "First run of the virtual machine needs to run connected"
-echo " - Build kind cluster"
-echo " - Install migration toolkit for virtualization"
-echo ""
-echo " IMPORTANT - first boot script will run automatically after"
-echo "  first time the machine boot, it may take a few minutes,"
-echo "  wait for the first boot script to finish before shuting"
-echo "  the virtual machine down"
-echo ""
-echo "login:"
-echo "   ssh -p 2222 demo@localhost # password: demo"
-echo ""
-echo "https://127.0.0.1:30443 - migration toolkit web user interface"
-echo "https://127.0.0.1:30444 - migration toolkit inventory server"
-echo "=================================================="
-echo ""
+# Extract the tar.gz file into the directory
+tar -xzf $FILENAME -C $EXTRACT_DIR --strip-components=1
 
-cp ${IMAGE} ${IMAGE_STEP1}
+# Clean up by removing the downloaded tar.gz file (optional)
+rm $FILENAME
 
-# Start the virtual machine
-# This is a distructive operation
-read -r -p "Do you want to start the virtual machine for first run now? [y/N]: " response
-response=${response,,} # tolower
+# Add forkliftci git dir
+forkliftci_dir="$EXTRACT_DIR/ci/forkliftci"
 
-if [[ "$response" =~ ^(yes|y)$ ]]; then
-    qemu-kvm -name fedora-cloud \
-        -m 4096 -smp 4 \
-        -cpu host \
-        -drive file=${IMAGE},if=virtio \
-        -netdev user,id=net0,hostfwd=tcp::2222-:22,hostfwd=tcp::30443-:30443,hostfwd=tcp::30444-:30444,hostfwd=tcp::6443-:6443 \
-        -device virtio-net,netdev=net0 \
-        -nographic
-fi
+# Chown the repository 
+mkdir -p $forkliftci_dir/.git
+chown -R $USERNAME:$USERNAME $EXTRACT_DIR
