@@ -55,6 +55,10 @@ ssh -p 2222 demo@localhost
 
 To run the .qcow image, use the following command:
 ```sh
+IMAGE=fedora-cloud.qcow2
+
+curl -Lo ${IMAGE} https://github.com/yaacov/mtv-demo-builder/releases/download/v0.0.0/fedora-cloud-clean.qcow2
+
 qemu-kvm -name fedora-cloud \
         -m 4096 -smp 4 \
         -cpu host \
