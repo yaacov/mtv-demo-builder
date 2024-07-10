@@ -71,7 +71,7 @@ qemu-kvm -name fedora-cloud \
 
 Replace `${IMAGE}` with the path to your .qcow2 image file.
 
-Go to wen console at: https://127.0.0.1:30443
+After the VM finish booting, wait for the first boot script to start and finshe (only on first boot), then go to wen console at: https://127.0.0.1:30443
 
 ## Contact
 
