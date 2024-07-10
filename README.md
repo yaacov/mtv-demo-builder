@@ -59,7 +59,7 @@ IMAGE=fedora-cloud.qcow2
 
 curl -Lo ${IMAGE} https://github.com/yaacov/mtv-demo-builder/releases/download/v0.0.0/fedora-cloud-clean.qcow2
 
-# IMPORATNT: if first boot, wait for first boot script to complete.
+# IMPORATNT: on first boot, wait for first boot script to complete.
 qemu-kvm -name fedora-cloud \
         -m 4096 -smp 4 \
         -cpu host \
