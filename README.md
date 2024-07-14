@@ -42,7 +42,7 @@ If successful the script will create a file `fedora-cloud.qcow2` that will inclu
 After the first boot, we have a .qcow image with a kind cluster installed and MTV running in the cluster. The VM will expose ports to access the UI, API services, and an SSH server.
 
 - **Migration Toolkit Web User Interface**: `https://127.0.0.1:30443`
-- **Migration Toolkit Inventory Server**: `https://127.0.0.1:30444`
+- **Migration Toolkit Inventory Server**: `https://127.0.0.1:30444/providers`
 - **SSH Server**: Port 2222 (user: `demo`, password: `demo`)
 
 To log into the machine via SSH:
