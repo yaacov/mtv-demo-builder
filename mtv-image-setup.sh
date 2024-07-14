@@ -35,12 +35,17 @@ curl -Lo $FILENAME $URL
 
 # Create a directory to extract the contents
 EXTRACT_DIR="forklift-console-plugin"
-mkdir -p $EXTRACT_DIR
+mkdir -p $EXTRACT_DIR-tmp
 
 # Extract the tar.gz file into the directory
-tar -xzf $FILENAME -C $EXTRACT_DIR --strip-components=1
+tar -xzf $FILENAME -C $EXTRACT_DIR-tmp --strip-components=1
 
-# Clean up by removing the downloaded tar.gz file (optional)
+# Copy ci directory
+mkdir -p $EXTRACT_DIR
+cp -R $EXTRACT_DIR-tmp/ci $EXTRACT_DIR
+
+# Clean up by removing the downloaded tar.gz file and forklift code
+rm -rf $EXTRACT_DIR-tmp
 rm $FILENAME
 
 # Add forkliftci git dir
