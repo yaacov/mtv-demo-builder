@@ -55,9 +55,9 @@ ssh -p 2222 demo@localhost
 
 To run the .qcow image, use the following command:
 ```sh
-IMAGE=fedora-cloud.qcow2
+IMAGE=fedora-cloud-clean.qcow2
 
-curl -Lo ${IMAGE}.tar.gz https://github.com/yaacov/mtv-demo-builder/releases/download/v0.0.1/fedora-cloud-clean.qcow2.tar.gz
+curl -LO https://github.com/yaacov/mtv-demo-builder/releases/download/v0.0.1/${IMAGE}.tar.gz
 tar -xzvf ${IMAGE}.tar.gz
 
 # IMPORATNT: on first boot, wait for first boot script to complete.
