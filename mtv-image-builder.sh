@@ -38,6 +38,10 @@ virt-customize -a ${IMAGE} --upload ${SERVICE}:/etc/systemd/system/kind-control-
 virt-customize -a ${IMAGE} --run-command 'bash /mtv-image-setup.sh'
 virt-customize -a ${IMAGE} --firstboot ${FIRST_BOOT}
 
+# Copy and gzip the image before first run (clean image)
+cp ${IMAGE} ${IMAGE_STEP1}
+tar -czvf ${IMAGE_STEP1}.tar.gz ${IMAGE_STEP1}
+
 echo "=================================================="
 echo "First run of the virtual machine needs to run connected"
 echo " - Build kind cluster"
@@ -52,12 +56,9 @@ echo "login:"
 echo "   ssh -p 2222 demo@localhost # password: demo"
 echo ""
 echo "https://127.0.0.1:30443 - migration toolkit web user interface"
-echo "https://127.0.0.1:30444 - migration toolkit inventory server"
+echo "https://127.0.0.1:30444/providers - migration toolkit inventory server"
 echo "=================================================="
 echo ""
-
-cp ${IMAGE} ${IMAGE_STEP1}
-tar -czvf ${IMAGE_STEP1}.tar.gz ${IMAGE_STEP1}
 
 # Start the virtual machine
 # This is a distructive operation

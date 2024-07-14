@@ -15,3 +15,17 @@ sudo cp ~/.kube/config ~demo/.kube/config
 
 # Change owner to demo user
 chown demo:demo -R ~demo/.kube
+
+echo ""
+echo "=================================================="
+echo ""
+echo "MTV demo virtual machine is ready"
+echo ""
+echo "ssh login:"
+echo "   ssh -p 2222 demo@localhost # password: demo"
+echo ""
+echo "https://127.0.0.1:30443 - migration toolkit web user interface"
+echo "https://127.0.0.1:30444/providers - migration toolkit inventory server"
+echo ""
+echo "=================================================="
+echo ""
