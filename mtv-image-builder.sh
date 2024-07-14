@@ -25,18 +25,15 @@ fi
 
 cp ${BASE_IMAGE} ${IMAGE}
 
-# Set root password
-echo "Setting root user for base imgae ..."
-virt-customize -a ${IMAGE} --uninstall cloud-init
-
 # Run setup script
-echo "Run setup scripts on base imgae ..."
-virt-customize -a ${IMAGE} --upload ${SCRIPT}:/mtv-image-setup.sh
-virt-customize -a ${IMAGE} --upload ${FIRST_BOOT}:/first-boot.sh
-virt-customize -a ${IMAGE} --upload ${SERVICE}:/etc/systemd/system/kind-control-plane.service
-
-virt-customize -a ${IMAGE} --run-command 'bash /mtv-image-setup.sh'
-virt-customize -a ${IMAGE} --firstboot ${FIRST_BOOT}
+echo "Customize base imgae ..."
+virt-customize -a ${IMAGE} \
+  --uninstall cloud-init \
+  --upload ${SCRIPT}:/mtv-image-setup.sh \
+  --upload ${FIRST_BOOT}:/first-boot.sh \
+  --upload ${SERVICE}:/etc/systemd/system/kind-control-plane.service \
+  --run-command 'bash /mtv-image-setup.sh' \
+  --firstboot ${FIRST_BOOT}
 
 # Copy and gzip the image before first run (clean image)
 cp ${IMAGE} ${IMAGE_STEP1}
@@ -61,7 +58,8 @@ echo "=================================================="
 echo ""
 
 # Start the virtual machine
-# This is a distructive operation
+# After first run the virtual machine image will be bigger and include all the
+# container images and code to run disconnected
 read -r -p "Do you want to start the virtual machine for first run now? [y/N]: " response
 response=${response,,} # tolower
 
