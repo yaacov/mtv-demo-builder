@@ -57,7 +57,7 @@ To run the .qcow image, use the following command:
 ```sh
 IMAGE=mtv-demo-clean.qcow2
 
-curl -LO https://github.com/yaacov/mtv-demo-builder/releases/download/v0.0.1/${IMAGE}.tar.gz
+curl -LO https://github.com/yaacov/mtv-demo-builder/releases/download/v0.0.2/${IMAGE}.tar.gz
 tar -xzvf ${IMAGE}.tar.gz
 
 # IMPORATNT: on first boot, wait for first boot script to complete.
