@@ -4,12 +4,19 @@ set -euo pipefail
 
 script_dir=$(realpath $(dirname "$0"))
 
-# Install qemu and libguestfs tools
+BASE_IMAGE=Fedora-Cloud-Base-Generic.x86_64-40-1.14.qcow2
+IMAGE=mtv-demo.qcow2
+IMAGE_STEP1=mtv-demo-clean.qcow2
+
+# ===============================
+# Install required software
+# ===============================
+
 #sudo dnf install libguestfs-tools-c qemu-kvm qemu-img
 
-BASE_IMAGE=Fedora-Cloud-Base-Generic.x86_64-40-1.14.qcow2
-IMAGE=fedora-cloud.qcow2
-IMAGE_STEP1=fedora-cloud-clean.qcow2
+# ===============================
+# Download base image
+# ===============================
 
 SCRIPT=${script_dir}/mtv-image-setup.sh
 FIRST_BOOT=${script_dir}/first-boot.sh
@@ -22,6 +29,10 @@ else
     echo "Downloading base imgae ..."
     curl -LO https://download.fedoraproject.org/pub/fedora/linux/releases/40/Cloud/x86_64/images/${BASE_IMAGE}
 fi
+
+# ===============================
+# Customize demo image
+# ===============================
 
 cp ${BASE_IMAGE} ${IMAGE}
 
@@ -56,6 +67,11 @@ echo "https://127.0.0.1:30443 - migration toolkit web user interface"
 echo "https://127.0.0.1:30444/providers - migration toolkit inventory server"
 echo "=================================================="
 echo ""
+
+
+# ===============================
+# First boot (optional)
+# ===============================
 
 # Start the virtual machine
 # After first run the virtual machine image will be bigger and include all the

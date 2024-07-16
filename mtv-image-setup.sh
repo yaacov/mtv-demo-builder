@@ -1,6 +1,10 @@
 #!/bin/bash
 
-sudo dnf install podman -y
+sudo dnf install podman git -y
+
+# ===============================
+# Set users
+# ===============================
 
 # Define the username and password
 USERNAME="demo"
@@ -16,41 +20,47 @@ echo "$USERNAME:$PASSWORD" | sudo chpasswd
 usermod -aG wheel $USERNAME
 echo '%wheel ALL=(ALL)       NOPASSWD: ALL' >> /etc/sudoers
 
+# ===============================
+# Install kubectl and kink
+# ===============================
+
 # Install kubectl
-curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+VERSION=$(curl -L -s https://dl.k8s.io/release/stable.txt)
+curl -LO https://dl.k8s.io/release/${VERSION}/bin/linux/amd64/kubectl
 sudo install kubectl /usr/local/bin/kubectl
 
 # Install kind
-export VERSION=v0.23.0
+VERSION=$(curl -s https://api.github.com/repos/kubernetes-sigs/kind/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")')
 curl -LO https://kind.sigs.k8s.io/dl/${VERSION}/kind-linux-amd64
 sudo install kind-linux-amd64 /usr/local/bin/kind
 
-# Get mtv UI repository
-# Define the URL and the filename
-FILENAME="v2.6.3-rc3.tar.gz"
-URL="https://github.com/kubev2v/forklift-console-plugin/archive/refs/tags/${FILENAME}"
+# ===============================
+# Clone CI scripts
+# ===============================
 
-# Download the tar.gz file
-curl -Lo $FILENAME $URL
+# Define the repository URL and the extraction directory
+REPO_URL="https://github.com/kubev2v/forklift-console-plugin.git"
+EXTRACT_DIR="forklift-console-plugin"
 
 # Create a directory to extract the contents
-EXTRACT_DIR="forklift-console-plugin"
 mkdir -p $EXTRACT_DIR-tmp
 
-# Extract the tar.gz file into the directory
-tar -xzf $FILENAME -C $EXTRACT_DIR-tmp --strip-components=1
+# Clone the main branch of the repository into the directory
+git clone --branch main --single-branch $REPO_URL $EXTRACT_DIR-tmp
 
 # Copy ci directory
 mkdir -p $EXTRACT_DIR
 cp -R $EXTRACT_DIR-tmp/ci $EXTRACT_DIR
 
+
+# ===============================
+# Cleanup
+# ===============================
+
 # Clean up by removing the downloaded tar.gz file and forklift code
 rm -rf $EXTRACT_DIR-tmp
 rm $FILENAME
 
-# Add forkliftci git dir
-forkliftci_dir="$EXTRACT_DIR/ci/forkliftci"
-
 # Chown the repository 
-mkdir -p $forkliftci_dir/.git
+mkdir -p $EXTRACT_DIR/ci/forkliftci/.git
 chown -R $USERNAME:$USERNAME $EXTRACT_DIR

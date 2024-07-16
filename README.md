@@ -55,13 +55,13 @@ ssh -p 2222 demo@localhost
 
 To run the .qcow image, use the following command:
 ```sh
-IMAGE=fedora-cloud-clean.qcow2
+IMAGE=mtv-demo-clean.qcow2
 
 curl -LO https://github.com/yaacov/mtv-demo-builder/releases/download/v0.0.1/${IMAGE}.tar.gz
 tar -xzvf ${IMAGE}.tar.gz
 
 # IMPORATNT: on first boot, wait for first boot script to complete.
-qemu-kvm -name fedora-cloud \
+qemu-kvm -name mtv-demo \
         -m 4096 -smp 4 \
         -cpu host \
         -drive file=${IMAGE},if=virtio \
