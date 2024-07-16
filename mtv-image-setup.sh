@@ -52,7 +52,6 @@ git clone --branch main --single-branch $REPO_URL $EXTRACT_DIR-tmp
 mkdir -p $EXTRACT_DIR
 cp -R $EXTRACT_DIR-tmp/ci $EXTRACT_DIR
 
-
 # ===============================
 # Cleanup
 # ===============================
@@ -64,3 +63,9 @@ rm $FILENAME
 # Chown the repository 
 mkdir -p $EXTRACT_DIR/ci/forkliftci/.git
 chown -R $USERNAME:$USERNAME $EXTRACT_DIR
+
+# ===============================
+# First boot script
+# ===============================
+chmod +x /firstboot.sh
+systemctl enable firstboot.service

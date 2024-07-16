@@ -19,7 +19,7 @@ IMAGE_STEP1=mtv-demo-clean.qcow2
 # ===============================
 
 SCRIPT=${script_dir}/mtv-image-setup.sh
-FIRST_BOOT=${script_dir}/first-boot.sh
+FIRST_BOOT=${script_dir}/firstboot.sh
 SERVICE=${script_dir}/kind-control-plane.service
 
 # Download base image
@@ -41,10 +41,9 @@ echo "Customize base imgae ..."
 virt-customize -a ${IMAGE} \
   --uninstall cloud-init \
   --upload ${SCRIPT}:/mtv-image-setup.sh \
-  --upload ${FIRST_BOOT}:/first-boot.sh \
+  --upload ${FIRST_BOOT}:/firstboot.sh \
   --upload ${SERVICE}:/etc/systemd/system/kind-control-plane.service \
-  --run-command 'bash /mtv-image-setup.sh' \
-  --firstboot ${FIRST_BOOT}
+  --run-command 'bash /mtv-image-setup.sh'
 
 # Copy and gzip the image before first run (clean image)
 cp ${IMAGE} ${IMAGE_STEP1}
