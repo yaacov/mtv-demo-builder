@@ -6,6 +6,8 @@ After=network.target network-online.target
 [Service]
 Type=simple
 ExecStart=/firstboot.sh
+StandardOutput=tty 
+StandardError=tty
 
 [Install]
 WantedBy=multi-user.target
