@@ -21,6 +21,7 @@ IMAGE_STEP1=mtv-demo-clean.qcow2
 SCRIPT=${script_dir}/mtv-image-setup.sh
 FIRST_BOOT=${script_dir}/firstboot.sh
 SERVICE=${script_dir}/kind-control-plane.service
+FIRST_SERVICE=${script_dir}/firstboot.service
 
 # Download base image
 if [ -e "${BASE_IMAGE}" ]; then
@@ -42,6 +43,7 @@ virt-customize -a ${IMAGE} \
   --uninstall cloud-init \
   --upload ${SCRIPT}:/mtv-image-setup.sh \
   --upload ${FIRST_BOOT}:/firstboot.sh \
+  --upload ${FIRST_SERVICE}:/etc/systemd/system/firstboot.service \
   --upload ${SERVICE}:/etc/systemd/system/kind-control-plane.service \
   --run-command 'bash /mtv-image-setup.sh'
 
@@ -66,7 +68,6 @@ echo "https://127.0.0.1:30443 - migration toolkit web user interface"
 echo "https://127.0.0.1:30444/providers - migration toolkit inventory server"
 echo "=================================================="
 echo ""
-
 
 # ===============================
 # First boot (optional)

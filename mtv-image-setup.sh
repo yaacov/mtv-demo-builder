@@ -3,7 +3,7 @@
 sudo dnf install podman git -y
 
 # ===============================
-# Set users
+# Set demo user
 # ===============================
 
 # Define the username and password
@@ -21,7 +21,7 @@ usermod -aG wheel $USERNAME
 echo '%wheel ALL=(ALL)       NOPASSWD: ALL' >> /etc/sudoers
 
 # ===============================
-# Install kubectl and kink
+# Install kubectl and kind
 # ===============================
 
 # Install kubectl
@@ -65,7 +65,7 @@ mkdir -p $EXTRACT_DIR/ci/forkliftci/.git
 chown -R $USERNAME:$USERNAME $EXTRACT_DIR
 
 # ===============================
-# First boot script
+# Set first boot script
 # ===============================
 chmod +x /firstboot.sh
 systemctl enable firstboot.service

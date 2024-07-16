@@ -25,6 +25,13 @@ sudo cp ~/.kube/config ~demo/.kube/config
 chown demo:demo -R ~demo/.kube
 
 # ===============================
+# Run onlyonce
+# ===============================
+systemctl disable firstboot.service 
+rm -f /etc/systemd/system/firstboot.service
+mv /firstboot.sh /firstboot.sh.backup
+
+# ===============================
 # Pring help text
 # ===============================
 
@@ -44,10 +51,3 @@ echo "https://127.0.0.1:30444/providers - migration toolkit inventory server"
 echo " "
 echo "=================================================="
 echo " "
-
-# ===============================
-# Run once
-# ===============================
-systemctl disable firstboot.service 
-rm -f /etc/systemd/system/firstboot.service
-mv /firstboot.sh /firstboot.sh.backup
