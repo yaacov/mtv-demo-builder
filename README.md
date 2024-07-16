@@ -76,7 +76,7 @@ After the VM finish booting and a login prompt apear, wait for the first boot sc
 
 Notes:
   - Set virtual machine memory to 4Gi or more.
-  - On graphic boot the firtboot script output is hidded, to monitor progress you can login as demo user and check the machine logs.
+  - On graphic boot the first boot script output is hidded, to monitor progress you can login as demo user and check the machine logs.
 
 ## Contact
 
