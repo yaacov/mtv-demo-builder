@@ -1,7 +1,11 @@
 [Unit]
 Description=One time boot script
+Wants=network-online.target
+After=network.target network-online.target
+
 [Service]
 Type=simple
 ExecStart=/firstboot.sh
+
 [Install]
 WantedBy=multi-user.target
