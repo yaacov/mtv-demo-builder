@@ -41,8 +41,8 @@ If successful the script will create a file `fedora-cloud.qcow2` that will inclu
 
 After the first boot, we have a .qcow image with a kind cluster installed and MTV running in the cluster. The VM will expose ports to access the UI, API services, and an SSH server.
 
-- **Migration Toolkit Web User Interface**: `https://127.0.0.1:30443`
-- **Migration Toolkit Inventory Server**: `https://127.0.0.1:30444/providers`
+- **Migration Toolkit Web User Interface**: `https://[VM IP or hostname]:30443`
+- **Migration Toolkit Inventory Server**: `https://[VM IP or hostname]:30444/providers`
 - **SSH Server**: Port 2222 (user: `demo`, password: `demo`)
 
 To log into the machine via SSH:
@@ -72,7 +72,11 @@ qemu-kvm -name mtv-demo \
 
 Replace `${IMAGE}` with the path to your .qcow2 image file.
 
-After the VM finish booting and a login prompt apear, wait for the first boot script to start and finsh (only on first boot), then go to web console at: https://127.0.0.1:30443
+After the VM finish booting and a login prompt apear, wait for the first boot script to start and finsh (only on first boot), then go to web console at: https://[VM IP or hostname]:30443
+
+Notes:
+  - Set virtual machine memory to 4Gi or more.
+  - On graphic boot the firtboot script output is hidded, to monitor progress you can login as demo user and check the machine logs.
 
 ## Contact
 
