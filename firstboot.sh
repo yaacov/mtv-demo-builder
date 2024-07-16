@@ -25,7 +25,7 @@ sudo cp ~/.kube/config ~demo/.kube/config
 chown demo:demo -R ~demo/.kube
 
 # ===============================
-# Run onlyonce
+# Run first boot script only once
 # ===============================
 systemctl disable firstboot.service 
 rm -f /etc/systemd/system/firstboot.service
