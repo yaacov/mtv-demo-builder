@@ -47,7 +47,7 @@ After the first boot, we have a .qcow image with a kind cluster installed and MT
 
 To log into the machine via SSH:
 ```sh
-ssh -p 2222 demo@localhost
+ssh -p 2222 demo@[VM IP or hostname]
 # Password: demo
 ```
 
